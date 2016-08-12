@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sec">
+	<select id="readUserOne" parameterType="String" resultType="com.sub.model.UserVo">
+		select UserID, passWord, mobile. address
+		from `joohyung`.`TB_SEUSER`
+		where UserID=#{value}
+	</select>
+	<select id="readUserPermsOne" parameterType="String" resultType="com.sub.model.UserVo">
+		select UserID, authorityStr
+		from `joohyung`.`TB_SEauthority` join `joohyung`.`TB_SEUser_authority` using(authorityNo)
+		where TB_SEUser_authority.UserID = #{value}
+	</select>
+</mapper>
