@@ -40,6 +40,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		}
 
 		if (!matchPassword(userVo.getPassWord(), authToken.getCredentials())) {
+			System.out.println("비밀번호 틀림");
+			System.out.println("비밀번호 틀림");
+			System.out.println("비밀번호 틀림");
+			System.out.println("비밀번호 틀림");
+			System.out.println("비밀번호 틀림");
 			throw new BadCredentialsException("not matching username or password");
 		}
 

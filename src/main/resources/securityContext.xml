@@ -12,12 +12,21 @@
 
 						 
 <!-- contextConfigLocation -->
-<!-- 	<bean id="costomUserDetailsService" -->
-<!-- 		class="com.sub.costom.CostomUserDetailsService" /> -->
+	<bean id="costomUserDetailsService"
+		class="com.sub.costom.CostomUserDetailsService" />
 
 <!-- 	<bean id="customAuthenticationProvider" -->
 <!-- 		class="com.sub.costom.CustomAuthenticationProvider" /> -->
 
+
+	<bean id="authenticationFailureHandler" class="com.sub.costom.CustomAuthenticationFailureHandler">
+		<property name="loginidname" value="userid" />
+		<property name="loginpasswdname" value="userpw" />
+		<property name="loginredirectname" value="loginRedirect" />
+		<property name="exceptionmsgname" value="securityexceptionmsg" />
+		<property name="defaultFailureUrl" value="/result?result=fail" />
+	</bean>
+	
 	<context:component-scan base-package="com.sub.costom">
  		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
  	</context:component-scan>
@@ -26,8 +35,8 @@
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
 	<sec:authentication-manager alias="authenticationManager">
-		<sec:authentication-provider ref="customAuthenticationProvider" />
 		<sec:authentication-provider user-service-ref="costomUserDetailsService" />
+		<sec:authentication-provider ref="customAuthenticationProvider" />
 		<sec:authentication-provider>
 			<sec:jdbc-user-service data-source-ref="dataSource"
 				id="jdbcUserService" />
@@ -50,8 +59,9 @@
 			username-parameter="userid"
 			password-parameter="userpw"
 			default-target-url="/user/result?result=result_success"
-			authentication-failure-url="/user/result?result=result_Faile"
+			authentication-failure-handler-ref="authenticationFailureHandler"
 		/>
+<!-- 			authentication-failure-url="/user/result?result=result_Faile" -->
 		<sec:logout logout-url="/result?result=faile"/>
 	</sec:http>
 

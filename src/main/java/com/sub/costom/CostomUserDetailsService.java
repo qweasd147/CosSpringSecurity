@@ -17,7 +17,7 @@ import com.sub.model.SecDao;
 import com.sub.model.UserPermission;
 import com.sub.model.UserVo;
 
-@Service("costomUserDetailsService")
+//@Service("costomUserDetailsService")
 public class CostomUserDetailsService implements UserDetailsService {
 
 	Logger logger = Logger.getLogger(this.getClass());
