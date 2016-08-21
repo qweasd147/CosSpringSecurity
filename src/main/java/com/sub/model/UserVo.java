@@ -1,60 +1,64 @@
 package com.sub.model;
 
-public class UserVo {
-	private String userID;
-	private String passWord;
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
+public class UserVo extends User{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1140115440788810336L;
 	private String mobile;
 	private String address;
+	private String email;
 	
-	public UserVo() {}
-
-	
-	
-	public UserVo(String userID, String passWord, String mobile, String address) {
-		this.userID = userID;
-		this.passWord = passWord;
+	public UserVo(String username, String password, boolean enabled, boolean accountNonExpired,
+			boolean credentialsNonExpired, boolean accountNonLocked,
+			Collection<? extends GrantedAuthority> authorities, String mobile, String address, String email) {
+		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		this.mobile = mobile;
 		this.address = address;
+		this.email = email;
+	}
+
+	public UserVo(String username,String password,String mobile,String address, String email, String enabled) {
+//		super(username, password, Boolean.valueOf(enabled).booleanValue(), true, true, true, null);
+		super(username, password, true, true, true, true, null);
+		this.mobile = mobile;
+		this.address = address;
+		this.email = email;
 	}
 	
-	public String getUserID() {
-		return userID;
-	}
-
-	public String getPassWord() {
-		return passWord;
-	}
-
 	public String getMobile() {
 		return mobile;
 	}
+
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
 
 	public String getAddress() {
 		return address;
 	}
 
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
-
-	public void setPassWord(String passWord) {
-		this.passWord = passWord;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
 
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
 
-
-	@Override
-	public String toString() {
-		return "UserVo [userID=" + userID + ", passWord=" + passWord + ", mobile=" + mobile + ", address=" + address
-				+ "]";
+	public String getEmail() {
+		return email;
 	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 	
 }

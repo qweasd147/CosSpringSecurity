@@ -12,8 +12,7 @@
 
 						 
 <!-- contextConfigLocation -->
-	<bean id="costomUserDetailsService"
-		class="com.sub.costom.CostomUserDetailsService" />
+	<bean id="costomUserDetailsService" class="com.sub.costom.CostomUserDetailsService"/>
 
 <!-- 	<bean id="customAuthenticationProvider" -->
 <!-- 		class="com.sub.costom.CustomAuthenticationProvider" /> -->
@@ -37,13 +36,13 @@
 	<sec:authentication-manager alias="authenticationManager">
 		<sec:authentication-provider user-service-ref="costomUserDetailsService" />
 		<sec:authentication-provider ref="customAuthenticationProvider" />
-		<sec:authentication-provider>
-			<sec:jdbc-user-service data-source-ref="dataSource"
-				id="jdbcUserService" />
+<!-- 		<sec:authentication-provider> -->
+<!-- 			<sec:jdbc-user-service data-source-ref="dataSource" -->
+<!-- 				id="jdbcUserService" /> -->
 			<!--
 			<sec:password-encoder ref="passwordEncoder" />
 			-->
-		</sec:authentication-provider>
+<!-- 		</sec:authentication-provider> -->
 	</sec:authentication-manager>
 
 	<sec:http use-expressions="true">
@@ -59,8 +58,8 @@
 			username-parameter="userid"
 			password-parameter="userpw"
 			default-target-url="/user/result?result=result_success"
-			authentication-failure-handler-ref="authenticationFailureHandler"
 		/>
+<!-- 			authentication-failure-handler-ref="authenticationFailureHandler" -->
 <!-- 			authentication-failure-url="/user/result?result=result_Faile" -->
 		<sec:logout logout-url="/result?result=faile"/>
 	</sec:http>

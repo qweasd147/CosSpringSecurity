@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface SecDao {
 	
-	public UserVo readUserOne(String userID) throws Exception;
-	public List<UserPermission> readUserPermsOne(String userID) throws Exception;
+	public UserVvo readUserOne(String userID) throws Exception;
+	public List<UserPermVo> readUserPermsOne(String userID) throws Exception;
 }

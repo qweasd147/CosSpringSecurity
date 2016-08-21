@@ -13,12 +13,12 @@ public class SecDaoImp implements SecDao{
 	SqlSession sqlSession;
 
 	@Override
-	public UserVo readUserOne(String userID) throws Exception {
+	public UserVvo readUserOne(String userID) throws Exception {
 		return sqlSession.selectOne("sec.readUserOne", userID);
 	}
 	
 	@Override
-	public List<UserPermission> readUserPermsOne(String userID) throws Exception {
+	public List<UserPermVo> readUserPermsOne(String userID) throws Exception {
 		return sqlSession.selectList("sec.readUserPermsOne", userID);
 	}
 

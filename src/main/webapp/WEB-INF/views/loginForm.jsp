@@ -11,7 +11,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="/loginCheck">
+<form action="/loginCheck" method="post">
 <table>
 <tr>
 	<td>아이디 : </td><td><input type="text" name="userid"/></td>
