@@ -28,8 +28,9 @@ public class SecurityController {
 		return "result";
 	}
 	
-//	@RequestMapping("/result")
-//	public String permResult(){
-//		return "result";
-//	}
+	@RequestMapping("/userInfo")
+	public String userInfo(){
+//		"redirect:/result?result=success"
+		return "result";
+	}
 }

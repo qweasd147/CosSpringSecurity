@@ -91,7 +91,15 @@ public class CustomJdbcDaoImpl extends JdbcDaoImpl {
             public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
                 String username = rs.getString(1);
                 String password = rs.getString(2);
-                return new UserVo(username, password, AuthorityUtils.NO_AUTHORITIES);
+                String mobile = rs.getString(3);
+                String address = rs.getString(4);
+                String email = rs.getString(5);
+                String enable = rs.getString(6);
+                
+                UserVo rtnVo = new UserVo(username, password, mobile, address, email, enable, AuthorityUtils.NO_AUTHORITIES);
+                System.out.println(rtnVo.toString());
+                
+                return rtnVo;
             }
 
         });

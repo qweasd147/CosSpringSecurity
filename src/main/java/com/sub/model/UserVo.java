@@ -19,6 +19,12 @@ public class UserVo implements UserDetails {
 	
 	private String id;
 	private String password;
+	private String mobile;
+	private String address;
+	private String email;
+
+	private boolean enable = true;
+	
 	private Set<GrantedAuthority> authorities;
 	
 	public UserVo(String id, String password, Collection<? extends GrantedAuthority> authorities){
@@ -27,6 +33,17 @@ public class UserVo implements UserDetails {
 		this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
 	}
 
+	public UserVo(String id, String password, String mobile, String address, String email, String enable,Collection<? extends GrantedAuthority> authorities){
+		this.id = id;
+		this.password = password;
+		this.mobile = mobile;
+		this.address = address;
+		this.email = email;
+		this.enable = Boolean.valueOf(enable).booleanValue();
+		this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
+	}
+	
+	
 	public String getId() {
 		return id;
 	}
@@ -83,7 +100,7 @@ public class UserVo implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return true;
+		return enable;
 	}
 	
 	
@@ -101,6 +118,30 @@ public class UserVo implements UserDetails {
         return sortedAuthorities;
     }
 	
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	private static class AuthorityComparator implements Comparator<GrantedAuthority>, Serializable {
         private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
@@ -118,5 +159,12 @@ public class UserVo implements UserDetails {
             return g1.getAuthority().compareTo(g2.getAuthority());
         }
     }
+	
+	
+	@Override
+	public String toString() {
+		return "UserVo [id=" + id + ", password=" + password + ", mobile=" + mobile + ", address=" + address
+				+ ", email=" + email + ", enable=" + enable + ", authorities=" + authorities + "]";
+	}
 
 }

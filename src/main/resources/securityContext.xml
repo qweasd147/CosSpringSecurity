@@ -13,7 +13,10 @@
 	<bean id="customJdbcDaoImpl" class="com.sub.costom.CustomJdbcDaoImpl">
 		<property name="dataSource" ref="dataSource" />
 		<property name="rolePrefix" value="" />
-		<property name="usersByUsernameQuery" value="SELECT `UserID`, `passWord` FROM `joohyung`.`TB_SEUSER` WHERE UserID=?" />
+		<property name="usersByUsernameQuery" value=
+		"SELECT `UserID`, `passWord`, `mobile`, `address`, `email`, `enabled`
+		FROM `joohyung`.`TB_SEUSER`
+		WHERE UserID=?" />
 		<property name="authoritiesByUsernameQuery"
 				value="SELECT AUTHORITYSTR
 						FROM `joohyung`.`TB_SEauthority`
@@ -50,7 +53,7 @@
 <!-- 		<sec:access-denied-handler error-page="/security/accessDenied"/> -->
 		<sec:intercept-url pattern="/admin/**"
 			access="hasAuthority('SEC_ADMIN')" />
-		<sec:intercept-url pattern="/member/**"
+		<sec:intercept-url pattern="/user/**"
 			access="hasAuthority('SEC_USER')" />
 		<sec:intercept-url pattern="/**" access="permitAll" />
 		<sec:form-login 
@@ -59,8 +62,12 @@
 			username-parameter="userid"
 			password-parameter="userpw"
 			default-target-url="/user/result?result=result_success"
+			
 		/>
-		<sec:logout logout-url="/result?result=faile"/>
+		<sec:logout
+			logout-url="/logout"
+			logout-success-url="/index"
+		/>
 	</sec:http>
 
 </beans>
