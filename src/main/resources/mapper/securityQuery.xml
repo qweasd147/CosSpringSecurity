@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="sec">
-	<select id="readUserOne" parameterType="String" resultType="com.sub.model.UserVvo">
+	<select id="readUserOne" parameterType="String" resultType="com.sub.model.UserVo">
 		select UserID as username, passWord as password, mobile, address, email, enabled
 		from `joohyung`.`TB_SEUSER`
 		where UserID=#{value}

@@ -1,9 +1,5 @@
 package com.sub.model;
 
-import java.util.Collection;
-
-import org.springframework.security.core.GrantedAuthority;
-
 public class UserPermVo {
 
 	private String userName;
