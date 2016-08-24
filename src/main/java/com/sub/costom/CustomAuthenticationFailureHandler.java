@@ -1,13 +1,17 @@
 package com.sub.costom;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
@@ -33,6 +37,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	private String defaultFailureUrl;		// 화면에 보여줄 URL(로그인 화면)
 	
 	public CustomAuthenticationFailureHandler(){
+		//기본 적인값. bean에서 값을 넣어서 적용x
 		this.loginidname = "j_username";
 		this.loginpasswdname = "j_password";
 		this.loginredirectname = "loginRedirect";
@@ -101,7 +106,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		
-		System.out.println("실패");
+		/*
 		// Request 객체의 Attribute에 사용자가 실패시 입력했던 로그인 ID와 비밀번호를 저장해두어 로그인 페이지에서 이를 접근하도록 한다
 		String loginid = request.getParameter(loginidname);
 		String loginpasswd = request.getParameter(loginpasswdname);
@@ -110,12 +115,25 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 		request.setAttribute(loginidname, loginid);
 		request.setAttribute(loginpasswdname, loginpasswd);
 		request.setAttribute(loginredirectname, loginRedirect);
-		
-		
 		// Request 객체의 Attribute에 예외 메시지 저장
 		request.setAttribute(exceptionmsgname, exception.getMessage());
 		System.out.println("defaultFailureUrl : "+defaultFailureUrl);
 		request.getRequestDispatcher(defaultFailureUrl).forward(request, response);
+		*/
+		
+		//ajax를 통해 접근 했는지 검사 해봐야됨. 일단 보류. 근데 정상적인 경로로 접근했으면 ajax 탔음
+		
+		Map<String, String> map = new HashMap<String, String>();
+		PrintWriter out = response.getWriter();
+		
+		map.put("result", "fail");
+		String jsonString = new ObjectMapper().writeValueAsString(map);
+//		map.put("rtnURL", defaultFailureUrl);	//딱히 필요 없을듯
+		
+		out.print(jsonString);
+		out.flush();
+		out.close();
+		
 	}
 
 }

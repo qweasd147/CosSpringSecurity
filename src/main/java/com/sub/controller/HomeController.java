@@ -1,4 +1,4 @@
-package com.sub.pjt;
+package com.sub.controller;
 
 import java.util.Locale;
 

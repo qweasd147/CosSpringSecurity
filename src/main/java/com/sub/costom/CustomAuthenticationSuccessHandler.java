@@ -1,17 +1,19 @@
 package com.sub.costom;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -28,7 +30,6 @@ private Logger logger = LoggerFactory.getLogger(this.getClass());
 	private String targetUrlParameter;
 	private String defaultUrl;
 	private boolean useReferer;
-	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 	
 	public CustomAuthenticationSuccessHandler(){
 		targetUrlParameter = "";
@@ -76,29 +77,46 @@ private Logger logger = LoggerFactory.getLogger(this.getClass());
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		
+		//ajax를 통해 접근 했는지 검사 해봐야됨. 일단 보류. 근데 정상적인 경로로 접근했으면 ajax 탔음
+		
 		clearAuthenticationAttributes(request);
 		UserVo details = (UserVo) authentication.getPrincipal();
 		
 		logger.debug("로그인 정보 {}",details.toString());
 		
+		Map<String, String> map = new HashMap<String, String>();
+		PrintWriter out = response.getWriter();
+		
+		String rtnURL = "";
+		
 		int intRedirectStrategy = decideRedirectStrategy(request, response);
 		switch(intRedirectStrategy){
 		case 1:
 			logger.info("지정된 Request Parameter(loginRedirect) 우선순위 {}", 1);
-			useTargetUrl(request, response);
+			rtnURL = getUseTargetUrl(request, response);
 			break;
 		case 2:
 			logger.info("세션에 저장된 URL로 redirect 우선순위 {}", 2);
-			useSessionUrl(request, response);
+			rtnURL = getUseSessionUrl(request, response);
 			break;
 		case 3:
 			logger.info("로그인 페이지를 방문하기 전 페이지의 URL 우선순위 {}", 3);
-			useRefererUrl(request, response);
+			rtnURL = getUseRefererUrl(request, response);
 			break;
 		default:
 			logger.info("디폴트 URL 우선순위 {}", 4);
-			useDefaultUrl(request, response);
+			rtnURL = getUseDefaultUrl(request, response);
 		}
+		
+		map.put("result", "success");
+		map.put("rtnURL", rtnURL);
+		
+		
+		String jsonString = new ObjectMapper().writeValueAsString(map);	//map을 String 형태로 변환
+		out.print(jsonString);
+		
+		out.flush();
+		out.close();
 	}
 	
 	private void clearAuthenticationAttributes(HttpServletRequest request) {
@@ -111,28 +129,29 @@ private Logger logger = LoggerFactory.getLogger(this.getClass());
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
 	
-	private void useTargetUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private String getUseTargetUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 		if(savedRequest != null){
 			requestCache.removeRequest(request, response);
 		}
 		String targetUrl = request.getParameter(targetUrlParameter);
-		redirectStrategy.sendRedirect(request, response, targetUrl);
+		
+		return targetUrl;
 	}
 	
-	private void useSessionUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private String getUseSessionUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 		String targetUrl = savedRequest.getRedirectUrl();
-		redirectStrategy.sendRedirect(request, response, targetUrl);
+		return targetUrl;
 	}
 	
-	private void useRefererUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private String getUseRefererUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String targetUrl = request.getHeader("REFERER");
-		redirectStrategy.sendRedirect(request, response, targetUrl);
+		return targetUrl;
 	}
 	
-	private void useDefaultUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		redirectStrategy.sendRedirect(request, response, defaultUrl);
+	private String getUseDefaultUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		return defaultUrl;
 	}
 	
 	/**
