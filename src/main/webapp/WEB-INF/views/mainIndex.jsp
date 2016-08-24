@@ -19,6 +19,7 @@
 <h1><a href="/admin/result">/admin/result</a></h1>
 <h1><a href="/user/result">/user/result</a></h1>
 
+<h1><a href="/encodingForm">비밀번호 암호화 된 값 보기</a></h1>
 <security:authorize access="isAuthenticated()" >
 <h1><a href="/logout">로그아웃</a></h1>
 </security:authorize>

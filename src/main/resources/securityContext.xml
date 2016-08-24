@@ -10,6 +10,10 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+	<context:component-scan base-package="com.sub.costom, com.sub.service">
+ 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+ 	</context:component-scan>
+ 	
 	<bean id="customJdbcDaoImpl" class="com.sub.costom.CustomJdbcDaoImpl">
 		<property name="dataSource" ref="dataSource" />
 		<property name="rolePrefix" value="" />
@@ -28,29 +32,39 @@
 		<property name="enableGroups" value="false" />
 	</bean>
 	
-	<bean id="authenticationFailureHandler" class="com.sub.costom.CustomAuthenticationFailureHandler">
+	
+ 	
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<sec:authentication-manager alias="authenticationManager">
+		<sec:authentication-provider user-service-ref="customJdbcDaoImpl">
+			 <sec:password-encoder ref="bcryptPasswordEncoder" />
+		</sec:authentication-provider>
+	</sec:authentication-manager>
+
+
+	<bean id="customAuthenticationSuccessHandler" class="com.sub.costom.CustomAuthenticationSuccessHandler">
+		<property name="targetUrlParameter" value="loginRedirect" />	<!-- loginRedirect는  view의 form 태그에서 정의 -->
+		<property name="useReferer" value="false" />
+		<property name="defaultUrl" value="/index" />
+	</bean>
+
+	<bean id="customAuthenticationFailureHandler" class="com.sub.costom.CustomAuthenticationFailureHandler">
 		<property name="loginidname" value="userid" />
 		<property name="loginpasswdname" value="userpw" />
 		<property name="loginredirectname" value="loginRedirect" />
 		<property name="exceptionmsgname" value="securityexceptionmsg" />
-		<property name="defaultFailureUrl" value="/result?result=fail" />
+		<property name="defaultFailureUrl" value="/loginForm?fail=true" />
 	</bean>
-	
-	<context:component-scan base-package="com.sub.costom">
- 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
- 	</context:component-scan>
- 	
-	<bean id="passwordEncoder"
-		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-
-	<sec:authentication-manager alias="authenticationManager">
-<!-- 		<sec:authentication-provider user-service-ref="costomUserDetailsService" /> -->
-<!-- 		<sec:authentication-provider ref="customAuthenticationProvider" /> -->
-		<sec:authentication-provider user-service-ref="customJdbcDaoImpl" />
-	</sec:authentication-manager>
 
 	<sec:http use-expressions="true">
 <!-- 		<sec:access-denied-handler error-page="/security/accessDenied"/> -->
+		<!-- 접근 안됨
+		<sec:intercept-url pattern="/loginCheck"
+			access="permitAll" requires-channel="https"/>
+		<sec:intercept-url pattern="/loginForm"
+			access="permitAll" requires-channel="https"/>
+		-->
 		<sec:intercept-url pattern="/admin/**"
 			access="hasAuthority('SEC_ADMIN')" />
 		<sec:intercept-url pattern="/user/**"
@@ -61,8 +75,9 @@
 			login-processing-url="/loginCheck"
 			username-parameter="userid"
 			password-parameter="userpw"
-			default-target-url="/user/result?result=result_success"
 			
+			authentication-success-handler-ref="customAuthenticationSuccessHandler"
+			authentication-failure-handler-ref="customAuthenticationFailureHandler"
 		/>
 		<sec:logout
 			logout-url="/logout"

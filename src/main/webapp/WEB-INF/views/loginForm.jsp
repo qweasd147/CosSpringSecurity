@@ -17,8 +17,18 @@
 	<td>아이디 : </td><td><input type="text" name="userid"/></td>
 </tr>
 <tr>
-	<td>비밀번호 : </td><td><input type="text" name="userpw"/></td>
+	<td>비밀번호 : </td><td><input type="text" name="userpw"/>
+	원래는 히든으로 넣어야하는 redirect 주소<input type="text" name="loginRedirect" value="${loginRedirect}" readonly="readonly" />
+	</td>
 </tr>
+<c:if test="${not empty securityexceptionmsg}">
+        <tr>
+            <td colspan="2">
+                <p>Your login attempt was not successful, try again.</p>
+                <p>${securityexceptionmsg}</p>
+            </td>
+        </tr>
+        </c:if>
 <tr>
 	<td colspan="2"><button type="submit" >로그인</button></td>
 </tr>

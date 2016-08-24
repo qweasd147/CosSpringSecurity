@@ -42,10 +42,6 @@ public class CustomJdbcDaoImpl extends JdbcDaoImpl {
 	public UserDetails loadUserByUsername(String username)	throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		List<UserDetails> users = loadUsersByUsername(username);
-		System.out.println("loadUserByUsername");
-		System.out.println("loadUserByUsername");
-		System.out.println("loadUserByUsername");
-		System.out.println("loadUserByUsername");
         if (users.size() == 0) {
             logger.debug("Query returned no results for user '" + username + "'");
             
@@ -54,14 +50,13 @@ public class CustomJdbcDaoImpl extends JdbcDaoImpl {
         }
 
         UserVo user = (UserVo)users.get(0); // contains no GrantedAuthority[]
-
         Set<GrantedAuthority> dbAuthsSet = new HashSet<GrantedAuthority>();
 
         if (getEnableAuthorities()) {
             dbAuthsSet.addAll(loadUserAuthorities(user.getUsername()));
         }
 
-        if (getEnableGroups()) {
+        if (getEnableGroups()) {//false 해 놓음
             dbAuthsSet.addAll(loadGroupAuthorities(user.getUsername()));
         }
 
@@ -82,11 +77,6 @@ public class CustomJdbcDaoImpl extends JdbcDaoImpl {
 	@Override
 	protected List<UserDetails> loadUsersByUsername(String username) {
 		// TODO Auto-generated method stub
-		System.out.println("loadUsersByUsername");
-		System.out.println("loadUsersByUsername");
-		System.out.println("loadUsersByUsername");
-		System.out.println("loadUsersByUsername");
-		System.out.println("loadUsersByUsername");
 		return getJdbcTemplate().query(getUsersByUsernameQuery(), new String[] {username}, new RowMapper<UserDetails>() {
             public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
                 String username = rs.getString(1);
@@ -97,7 +87,6 @@ public class CustomJdbcDaoImpl extends JdbcDaoImpl {
                 String enable = rs.getString(6);
                 
                 UserVo rtnVo = new UserVo(username, password, mobile, address, email, enable, AuthorityUtils.NO_AUTHORITIES);
-                System.out.println(rtnVo.toString());
                 
                 return rtnVo;
             }

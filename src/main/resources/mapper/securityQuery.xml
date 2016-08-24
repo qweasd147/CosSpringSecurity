@@ -14,4 +14,18 @@
 		from `joohyung`.`TB_SEauthority` join `joohyung`.`TB_SEUser_authority` using(authorityNo)
 		where TB_SEUser_authority.UserID = #{value}
 	</select>
+	<update id="updateUserInfo" parameterType="com.sub.model.UserVo">
+		UPDATE TB_SEUSER
+		SET `passWord`=#{password}, mobile = #{mobile}, `address` = #{address},  email = #{email},
+		<if test="enabled == null">
+    		`enabled`='false'
+  		</if>
+  		<if test="enabled != true">
+    		`enabled`='false'
+  		</if>
+		<if test="enabled == true">
+    		`enabled`='true'
+  		</if>
+		WHERE `TB_SEUSER`.`UserID` = #{id};
+	</update>
 </mapper>
