@@ -19,13 +19,14 @@
 			
 			
 			$.ajax({
-				url : "${ctx}/loginCheck",
+				url : "${ctx}/write",
 				data : {userid : inputID, userpw : inputPW},
 				type : "POST",
 				beforeSend: function (xhr) {
 	            	xhr.setRequestHeader("X-Ajax-call", "true");
 	          	},
 	          	success:function(data, textStatus, jqXHR){
+	          		
 	          		var jsonObj = JSON.parse(data);
 	          		
 	          		if(jsonObj.result == "success"){

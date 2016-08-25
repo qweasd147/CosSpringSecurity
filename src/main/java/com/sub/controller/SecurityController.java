@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,8 +48,11 @@ public class SecurityController {
 		UserVo userVo = null;
 		if(!(authentication == null)){
 			userVo = (UserVo) authentication.getPrincipal();
-			model.addAttribute("userVo", userVo);
+		}else{
+			userVo = new UserVo("undefined", "undefined", null);
 		}
+		
+		model.addAttribute("userVo", userVo);
 		return "userinfo";
 	}
 	
@@ -64,7 +66,7 @@ public class SecurityController {
 		Map<String, String> map = null;
 		try {
 			map = securityService.passwordEncoding(targetStr);
-		} catch (Exception e) { logger.debug("Excepotion!! {}",e);}
+		} catch (Exception e) { logger.debug("Excepotion!!",e);}
 		
 		model.addAttribute("targetStr", map.get("targetStr"));
 		model.addAttribute("bCryptString", map.get("bCryptString"));
