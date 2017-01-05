@@ -21,11 +21,11 @@ public class SecurityServiceImp implements SecurityService{
 		if(StringUtils.hasText(targetStr)){
 			// 암호화 작업
 			String bCryptString = passwordEncoder.encode(targetStr);
-			map.put("targetStr", targetStr);
-			map.put("bCryptString", bCryptString);
+			map.put(INPUTPASSWORD, targetStr);
+			map.put(ENCODEDPASSWORD, bCryptString);
 		}else{
-			map.put("targetStr", "is EMP");
-			map.put("bCryptString", "is null");
+			map.put(INPUTPASSWORD, INPUTERR);
+			map.put(ENCODEDPASSWORD, ECODEDERR);
 		}
 		return map;
 	}
